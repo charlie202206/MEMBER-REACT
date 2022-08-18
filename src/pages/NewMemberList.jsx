@@ -1,15 +1,21 @@
-import React, { useState, useEffect, useMemo} from "react";
+import React, { useState, useEffect, useMemo, useContext} from "react";
 import axios from 'axios';
-import Table from '../component/Table';
-import {Button} from '../component/index';
+import Table from '../components/Table';
+import {Button} from '../components/index';
 import { useNavigate } from "react-router-dom";
-import Test from"./Test";
+import ContextAPI from "../ContextAPI";
+
 function NewMemberList(props){
+
+  const { memberId, memberName, memberEmail, memberSalesType } = useContext(ContextAPI);
+  console.log("props called inside of a function", memberId, memberName, memberEmail, memberSalesType);
 
    const [data, setData] = useState([]);
    const [mode,setMode]=useState(props._mode);
+
    let contentControl1 = null;
    const navigate = useNavigate();
+
    const columns = useMemo(
     () => [
       {

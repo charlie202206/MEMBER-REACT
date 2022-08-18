@@ -1,5 +1,5 @@
 .App {
-  text-align: left;
+  text-align: center;
 }
 
 .App-logo {
@@ -7,10 +7,130 @@
   pointer-events: none;
 }
 
+.container-login {
+  min-height: 40vh;
+  min-width: 60vh;
+  display: flex;
+  float: center;
+
+  margin-left: 30%;
+  margin-right: 30%;
+  margin-top: 10%;
+
+  border: 2px solid #dee2e6;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
+.container-apply {
+  /* min-height: 40vh; */
+  /* min-width: 60vh; */
+  /* display: flex; */
+  /* float: center; */
+
+  margin-left: 5%;
+  margin-right: 5%;
+  margin-top: 5%;
+
+  /* border: 0px solid #dee2e6; */
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  box-sizing: border-box;
+}
+
 @media (prefers-reduced-motion: no-preference) {
   .App-logo {
     animation: App-logo-spin infinite 20s linear;
   }
+}
+img {
+  vertical-align: middle;
+  border-style: none;
+}
+th {
+  text-align: inherit;
+}
+
+label {
+  display: inline-block;
+  margin-bottom: 0.5rem;
+}
+ol,
+ul,
+dl {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+
+ol ol,
+ul ul,
+ol ul,
+ul ol {
+  margin-bottom: 0;
+}
+p {
+  margin-top: 0;
+  margin-bottom: 1rem;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  margin-top: 0;
+  margin-bottom: 0.66em;
+}
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+.h1,
+.h2,
+.h3,
+.h4,
+.h5,
+.h6 {
+  margin-bottom: 0.66em;
+  font-family: inherit;
+  font-weight: 600;
+  line-height: 1.1;
+  color: inherit;
+}
+
+h1,
+.h1 {
+  font-size: 2rem;
+}
+
+h2,
+.h2 {
+  font-size: 1.75rem;
+}
+
+h3,
+.h3 {
+  font-size: 1.5rem;
+}
+
+h4,
+.h4 {
+  font-size: 1.125rem;
+}
+
+h5,
+.h5 {
+  font-size: 1rem;
+}
+
+h6,
+.h6 {
+  font-size: 0.875rem;
 }
 
 .App-header {
@@ -40,19 +160,102 @@
   }
 }
 
+
 button {
-  font-size: calc(3px + 2vmin);
+  width: 100px;
+  outline: 1px dotted;
+  outline: 5px auto -webkit-focus-ring-color;
 }
 body {
-  font-family: sans-serif;
+  margin: 0;
+  font-family: "Source Sans Pro", -apple-system, BlinkMacSystemFont, "Segoe UI",
+    "Helvetica Neue", Arial, sans-serif;
+  font-size: 0.9375rem;
+  font-weight: 400;
+  line-height: 1.5;
+  color: #495057;
+  text-align: left;
+  background-color: #f5f7fb;
+}
+
+form{
+  align-items: center;
+}
+div-box{
+  align-items: center;
+  float: center;
 }
 
 table {
+  width: 500px;
   border-collapse: collapse;
+  align-items: center;
+  text-align: left;
+  margin-left: 10%;
+  margin-right: 20%;
 }
 
 th,
 td {
   padding: 0.5rem;
   border: 1px solid black;
+}
+input,
+button,
+optgroup,
+textarea {
+  margin: 0;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+input{
+  padding: 8px 8px 8px 8px;
+}
+
+button::-moz-focus-inner,
+[type="button"]::-moz-focus-inner,
+[type="reset"]::-moz-focus-inner,
+[type="submit"]::-moz-focus-inner {
+  padding: 0;
+  border-style: none;
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  box-sizing: border-box;
+  padding: 0;
+}
+
+input[type="date"],
+input[type="time"],
+input[type="datetime-local"],
+input[type="month"] {
+  -webkit-appearance: listbox;
+}
+
+textarea {
+  overflow: auto;
+  resize: vertical;
+}
+
+select {
+  /* 생략 */
+  font-family: "Noto Sansf KR", sans-serif;
+  font-weight: 300;
+  line-height: 1.0;
+  font-family: inherit;
+  font-size: inherit;
+  width:410px;
+
+  color: #444;
+  background-color: #fff;
+
+  padding: 0.3em 0.1em 0.5em 0.8em;
+  margin: 0;
+
+  border: 1px solid #aaa;
+  border-radius: 0.2em;
+  box-shadow: 0 1px 0 1px rgba(0, 0, 0, 0.04);
 }

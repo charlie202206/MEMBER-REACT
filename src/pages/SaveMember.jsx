@@ -1,18 +1,24 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import { useParams } from 'react-router-dom';
 import axios from 'axios';
-// import NewMemberList from "./NewMemberList";
-import {useLocation} from "react-router"
-import Select from 'react-select'
+import NewMemberList from "./NewMemberList";
+import {useLocation} from "react-router";
+import Select from 'react-select';
+import ContextAPI, { ContextConsumer } from "../ContextAPI";
+
 function SaveMember() {
 
+  //변수 받아오기(props 대체)
   const location = useLocation();
   const props = location.state.value;
+
+  const { memberId, memberName, memberEmail, memberSalesType } = useContext(ContextAPI);
+  console.log("props called inside of a function", memberId, memberName, memberEmail, memberSalesType);
 
   const [name, setName] = useState(props.name);
   const [email, setEmail] = useState(props.email);
   const [phoneNumber, setPhoneNumber] = useState(props.phoneNumber);
-  const [salesType, setSalesType] = useState("delivery");
+  const [salesType, setSalesType] = useState("customer");
   const [zipCode, setZipCode] = useState(props.zipCode);
   const [address, setAddress] = useState(props.address);
   const [addressDetail, setAddressDetail] = useState(props.addressDetail);
@@ -22,41 +28,14 @@ function SaveMember() {
     search(props.id);
   }
 
-  const [selectedST, setSelectedST] = useState(salesType);
+  // const [selectedST, setSelectedST] = useState(salesType);
   const [mode, setMode] = useState('INIT');
 
   const { id } = useParams();
-  // const [params, setParams] = useState({ name: '', email: '', phoneNumber: '' });
-  // const OPTIONS = [
-  //   {  value: "customer", name: "개인회원" },
-  //   {  value: "company", name: "기업회원" },
-  //   {  value: "delivery", name: "배달원" }
-  // ];
-  const handleChange11 = (event) => {
-    setSalesType(event.target.value)
-  }
-  // const SelectBox = (props1) => {
-  //   const handleChange=(e)=>{
-  //     console.log(e.target.value);
-  //     setSelectedST(e.target.value);
-  //     setSalesType(e.target.value);
-  //   }
-  //   return (
-  //     <select onChange={handleChange}>
-  //         {props1.options.map((option) => (
 
-  //           <option
-  //           value={option.value}
-  //           key={option.value}
-  //             defaultValue={props1.defaultValue === option.value}
-  //             // defaultValue={salesType}
-  //           >
-  //             {option.name}
-  //           </option>
-  //         ))}
-  //       </select>
-  //   );
-  // };
+  const handleChangeCombo = (event) => {
+    setSalesType(event.target.value||"")
+  }
 
   function search(e){
 
@@ -73,7 +52,6 @@ function SaveMember() {
           setAddress(res.data.address);
           setAddressDetail(res.data.addressDetail);
           setEmail(res.data.email);
-          debugger;
           setSalesType(res.data.salesType);
 
       });
@@ -100,47 +78,48 @@ function SaveMember() {
           alert("정상수정되었습니다.");
           setMode("UPDATE");
         } else {
-          alert("등록되지 않았습니다.");
+          alert("수정되지 않았습니다.");
         }
         // console.log(import.meta.env.VITE_API_SERVER + '/member/members');
-      });
+      }).catch(err =>{alert("수정중 오류가 발생했습니다.")});
   }
 
   return (
-    <div >
+    <div className="container-apply">
       <h1>
         회원정보 수정
       </h1>
 
-      <form onSubmit={event => {
+      <form className="row g-3" onSubmit={event => {
         event.preventDefault();
         handleChange(event);
       }} >
-        <table>
+        <table className="table">
+        <tbody>
           <tr>
-
-            <th><h5>회원 이름<span className="red">*</span></h5></th>
-            <td><input type="text" name="membrename" id="membrename" value={name}  onChange={event=>{
-                setName(event.target.value); }} maxLength="40" tabIndex="1"
+            <td><h5>회원 이름<span className="red">*</span></h5></td>
+            <td><input type="text" name="membrename" id="membrename" value={name||""}  onChange={event=>{
+                setName(event.target.value||""); }} maxLength="40" tabIndex="1" size="50"
             /></td>
           </tr>
-          <th><h5>회원 이메일<span >*</span></h5></th>
-          <td>
-            <input type="text" name="email" id="email" value={email} onChange={event=>{
-                alert("이메일은 변경할수 없습니다"); }}maxLength="40" tabIndex="2" />
-          </td>
           <tr>
-            <th><h5>연락처<span >*</span></h5></th>
+          <td><h5>회원 이메일<span >*</span></h5></td>
+          <td>
+            <input type="text" name="email" id="email" value={email||""} onChange={event=>{
+                alert("이메일은 변경할수 없습니다"); }}maxLength="40" tabIndex="2" size="50"/>
+          </td>
+          </tr>
+          <tr>
+            <td><h5>연락처<span >*</span></h5></td>
             <td>
-              <input type="text" name="phoneNumber" id="phoneNumber" value={phoneNumber} onChange={event=>{
-                setPhoneNumber(event.target.value); }}maxLength="13" tabIndex="3" />
+              <input type="text" name="phoneNumber" id="phoneNumber" value={phoneNumber||""} onChange={event=>{
+                setPhoneNumber(event.target.value||""); }}maxLength="13" tabIndex="3" size="50"/>
             </td>
           </tr>
           <tr>
-            <th><h5>회원유형<span >*</span></h5></th>
+            <td><h5>회원유형<span >*</span></h5></td>
             <td>
-
-              <select value={salesType} onChange={handleChange11}>
+              <select value={salesType||""} onChange={handleChangeCombo}>
                 <option value="customer">customer</option>
                 <option value="company">company</option>
                 <option value="delivery">delivery</option>
@@ -148,31 +127,32 @@ function SaveMember() {
             </td>
           </tr>
           <tr>
-            <th><h5>Zipcode<span >*</span></h5></th>
+            <td><h5>Zipcode<span >*</span></h5></td>
             <td>
-              <input type="text" name="zipCode" id="zipCode" value={zipCode} onChange={event=>{
-                setZipCode(event.target.value); }} maxLength="5" tabIndex="5" />
+              <input type="text" name="zipCode" id="zipCode" value={zipCode||""} onChange={event=>{
+                setZipCode(event.target.value||""); }} maxLength="5" tabIndex="5" size="50"/>
             </td>
           </tr>
           <tr>
-            <th><h5>주소<span >*</span></h5></th>
+            <td><h5>주소<span >*</span></h5></td>
             <td>
-              <input type="text" name="address" id="address" value={address} onChange={event=>{
-                setAddress(event.target.value); }} maxLength="40" tabIndex="6" />
+              <input type="text" name="address" id="address" value={address||""} onChange={event=>{
+                setAddress(event.target.value||""); }} maxLength="40" tabIndex="6" size="50"/>
             </td>
           </tr>
           <tr>
-            <th><h5>주소상세<span >*</span></h5></th>
+            <td><h5>주소상세<span >*</span></h5></td>
             <td>
-              <input type="text" name="addressDetail" id="addressDetail" value={addressDetail} onChange={event=>{
-                setAddressDetail(event.target.value); }} maxLength="60" tabIndex="7" />
+              <input type="text" name="addressDetail" id="addressDetail" value={addressDetail||""} onChange={event=>{
+                setAddressDetail(event.target.value||""); }} maxLength="60" tabIndex="7" size="50"/>
             </td>
           </tr>
-          <br></br>
-          <tr>
-            <input type="submit" value="수정"></input>
-          </tr>
+          </tbody>
+
         </table>
+        <div className="box-size">
+        <button type="submit" className="btn btn-primary" style={{float:"auto"}}>수정</button>
+        </div>
       </form>
 
     </div>
