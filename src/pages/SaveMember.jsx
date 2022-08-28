@@ -4,7 +4,7 @@ import axios from 'axios';
 import NewMemberList from "./NewMemberList";
 import {useLocation} from "react-router";
 import Select from 'react-select';
-import ContextAPI, { ContextConsumer } from "../ContextAPI";
+import ContextAPI from "../ContextAPI";
 
 function SaveMember() {
 
@@ -12,16 +12,24 @@ function SaveMember() {
   const location = useLocation();
   const props = location.state.value;
 
-  const { memberId, memberName, memberEmail, memberSalesType } = useContext(ContextAPI);
-  console.log("props called inside of a function", memberId, memberName, memberEmail, memberSalesType);
+  //글로벌변수(useContext) ==사용 start
+  const context = useContext(ContextAPI);
+
+  debugger;
+
+  console.log(context);
+  console.log("props called inside of a function", context.memberEmail, context.memberName, context.memberId, context.memberSalesType);
+  // ======= 사용 end
+
+
 
   const [name, setName] = useState(props.name);
   const [email, setEmail] = useState(props.email);
   const [phoneNumber, setPhoneNumber] = useState(props.phoneNumber);
   const [salesType, setSalesType] = useState("customer");
-  const [zipCode, setZipCode] = useState(props.zipCode);
-  const [address, setAddress] = useState(props.address);
-  const [addressDetail, setAddressDetail] = useState(props.addressDetail);
+  // const [zipCode, setZipCode] = useState(props.zipCode);
+  // const [address, setAddress] = useState(props.address);
+  // const [addressDetail, setAddressDetail] = useState(props.addressDetail);
   const [hstate,setHstate]=useState("INIT");
   if(props.id != "" && hstate == "INIT"){
     setHstate("AFTER");
@@ -48,9 +56,9 @@ function SaveMember() {
           console.log("======end============> " );
           setName(res.data.name);
           setPhoneNumber(res.data.phoneNumber);
-          setZipCode(res.data.zipCode);
-          setAddress(res.data.address);
-          setAddressDetail(res.data.addressDetail);
+          // setZipCode(res.data.zipCode);
+          // setAddress(res.data.address);
+          // setAddressDetail(res.data.addressDetail);
           setEmail(res.data.email);
           setSalesType(res.data.salesType);
 
@@ -60,15 +68,26 @@ function SaveMember() {
 
   function handleChange(e) {
 
+    let checkpwd = "";
+    checkpwd = e.target.password.value;
+    if(checkpwd === "" ){
+      alert("수정을 위해서 패스워드를 입력하세요");
+      return;
+    }
+    if(e.target.password.value != e.target.passwordConfirm.value ){
+      alert("패스워드 확인 정보와 일치하지 않습니다.");
+      return;
+    }
      const params = {
       id: props.id,
       name: e.target.membrename.value,
       email: e.target.email.value,
       phoneNumber: e.target.phoneNumber.value,
       salesType: salesType,
-      zipCode: e.target.zipCode.value,
-      address: e.target.address.value,
-      addressDetail: e.target.addressDetail.value
+      encryptedPwd: e.target.password.value
+      // zipCode: e.target.zipCode.value,
+      // address: e.target.address.value,
+      // addressDetail: e.target.addressDetail.value
     };
     axios
       .put(import.meta.env.VITE_API_SERVER + '/member/memberId/'+props.id, params)
@@ -126,7 +145,7 @@ function SaveMember() {
               </select>
             </td>
           </tr>
-          <tr>
+          {/* <tr>
             <td><h5>Zipcode<span >*</span></h5></td>
             <td>
               <input type="text" name="zipCode" id="zipCode" value={zipCode||""} onChange={event=>{
@@ -145,6 +164,18 @@ function SaveMember() {
             <td>
               <input type="text" name="addressDetail" id="addressDetail" value={addressDetail||""} onChange={event=>{
                 setAddressDetail(event.target.value||""); }} maxLength="60" tabIndex="7" size="50"/>
+            </td>
+          </tr> */}
+          <tr>
+            <td><h5>패스워드<span >*</span></h5></td>
+            <td>
+              <input type="password" name="password" id="password" placeholder="패스워드" maxLength="13" tabIndex="13" size="50" />
+            </td>
+          </tr>
+          <tr>
+            <td><h5>패스워드확인<span >*</span></h5></td>
+            <td>
+              <input type="password" name="passwordConfirm" id="passwordConfirm" placeholder="패스워드확인" maxLength="13" tabIndex="14" size="50" />
             </td>
           </tr>
           </tbody>

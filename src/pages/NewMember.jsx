@@ -40,11 +40,15 @@ function NewMember(props) {
       email: e.target.email.value,
       phoneNumber: e.target.phoneNumber.value,
       salesType: salesType,
-      zipCode: e.target.zipCode.value,
-      address: e.target.address.value,
-      addressDetail: e.target.addressDetail.value
+      encryptedPwd: e.target.password.value,
+      // zipCode: e.target.zipCode.value,
+      // address: e.target.address.value,
+      // addressDetail: e.target.addressDetail.value
     };
-
+    if(e.target.password.value != e.target.passwordConfirm.value ){
+      alert("패스워드를 재확인하세요");
+      return;
+    }
     axios
       .post(import.meta.env.VITE_API_SERVER + '/member/members', params)
       .then((res) => {
@@ -98,13 +102,25 @@ function NewMember(props) {
             <td><h5>회원유형<span >*</span></h5></td>
             <td>
               <select value={salesType} onChange={handleChangeCombo} >
-                <option value="customer">customer</option>
-                <option value="company">company</option>
-                <option value="delivery">delivery</option>
+                <option value="customer">개인고객</option>
+                <option value="company">기업고객</option>
+                <option value="delivery">배달기사</option>
               </select>
             </td>
           </tr>
           <tr>
+            <td><h5>패스워드<span >*</span></h5></td>
+            <td>
+              <input type="password" name="password" id="password" placeholder="패스워드" maxLength="13" tabIndex="13" size="50" />
+            </td>
+          </tr>
+          <tr>
+            <td><h5>패스워드확인<span >*</span></h5></td>
+            <td>
+              <input type="password" name="passwordConfirm" id="passwordConfirm" placeholder="패스워드확인" maxLength="13" tabIndex="14" size="50" />
+            </td>
+          </tr>
+          {/* <tr>
             <td><h5>Zipcode<span >*</span></h5></td>
             <td>
               <input type="text" name="zipCode" id="zipCode" placeholder="우편번호" maxLength="5" tabIndex="5" size="50"/>
@@ -121,7 +137,7 @@ function NewMember(props) {
             <td>
               <input type="text" name="addressDetail" id="addressDetail" placeholder="상세주소" maxLength="60" tabIndex="7" size="50"/>
             </td>
-          </tr>
+          </tr>*/}
           </tbody>
           {/* <input type="submit" value="가입"></input> */}
 

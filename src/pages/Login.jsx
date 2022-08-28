@@ -1,5 +1,5 @@
-import React, { useState } from "react";
-import { ContextProvider } from "../ContextAPI";
+import React, { useState , useContext} from "react";
+import ContextAPI from "../ContextAPI";
 //import { createContext } from "react";
 // import 'bootstrap/dist/css/bootstrap.min.css';
 import { useNavigate } from "react-router-dom";
@@ -7,25 +7,20 @@ import axios from 'axios';
 
 function Login() {
 
-//const UserContext = createContext();
+  const context = useContext(ContextAPI);
 
-  const user = {
-    memberId: 1,
-    memberName: "Lee",
-    memberEmail: "aaaa",
-    memberSalesType: "company"
-  };
 
-  const [user1,setUser] = useState([]);
+  // const [user1,setUser1] = useState([]);
   const navigate = useNavigate();
   function userLogin(e) {
 
     const params = {
       email: e.target.staticEmail.value,
-      passward : e.target.inputPassword.value
+      encryptedPwd : e.target.inputPassword.value
     };
-
+debugger;
     console.log(params);
+    console.log("================>" + context);
     axios
       .post(import.meta.env.VITE_API_SERVER + '/member/login/', params)
       .then((res) => {
@@ -33,15 +28,35 @@ function Login() {
         console.log(res.data);
         console.log("======end============> ");
         // let userInfo = [];
-        const userInfo = {memberId:res.data.id,
-          memberName:res.data.name,
-          memberEmail:res.data.email,
-          memberSalesType:res.data.salesType};
-        setUser(userInfo);
-        userInfo.id = res.data.id;
-        userInfo.name =
-        navigate('/SaveMember', {state:{value: userInfo}})
-      });
+debugger;
+        if (res.status == "200" || res.status == "201") {
+          const userInfo = {memberId:res.data.id,
+            memberName:res.data.name,
+            memberEmail:res.data.email,
+            memberPhoneNumber:res.data.phoneNumber,
+            memberSalesType:res.data.salesType};
+
+          context.memberId = userInfo.memberId;
+          context.memberName = userInfo.memberName;
+          context.memberEmail = userInfo.memberEmail;
+          context.memberPhoneNumber = userInfo.memberPhoneNumber;
+          context.memberSalesType = userInfo.memberSalesType;
+
+          console.log("=============aaaa===>" + context);
+          console.log("=============bbbb===>" + userInfo);
+          userInfo.id = res.data.id;
+          userInfo.name =
+          navigate('/SaveMember', {state:{value: userInfo}})
+
+        } else if (res.status == "203") {
+          alert("아이디와 패스워드를 확인하세요");
+          navigate('/',{state:{value:""}})
+        } else {
+          alert("시스템 오류입니다:" + res.status);
+          navigate('/',{state:{value:""}})
+        }
+
+      }).catch(err => {alert("아이디와 패스워드를 확인하세요..")});
   }
 
   function moveNewMember()
@@ -49,7 +64,6 @@ function Login() {
     navigate('/newMember',{state:{value:""}})
   }
   return (
-    <ContextProvider value={user}>
       <div className="container-login"   >
         <h2>로그인</h2>
         <p> </p>
@@ -91,7 +105,7 @@ function Login() {
           }}  style={{float:"right"}} >회원가입</a>
 
       </div>
-    </ContextProvider>
+
   );
 
 }
